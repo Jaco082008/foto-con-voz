@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Galería de Imágenes</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #223451;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #e9e78f
+    }
+
+    #formulario {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      background: #293e49;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    #formulario input, #formulario textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    #formulario button {
+      background-color: #afaf4c;
+      color: white;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #formulario button:hover {
+      background-color: #b0de3a;
+    }
+
+    #galeria {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .tarjeta {
+      width: 250px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .tarjeta:hover {
+      transform: scale(1.03);
+    }
+
+    .tarjeta img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .contenido {
+      padding: 15px;
+    }
+
+    .contenido h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .contenido p {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .boton-eliminar {
+      background-color: crimson;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Galería de Imágenes</h1>
+
+  <div id="formulario">
+    <input type="text" id="url-imagen" placeholder="URL de la imagen">
+    <input type="text" id="titulo-imagen" placeholder="Título de la imagen">
+    <input type="text" id="descripcion-imagen" placeholder="Descripción...">
+    <button id="agregar-imagen">Agregar Imagen</button>
+  </div>
+
+  <div id="galeria"></div>
+
+  <script>
+    const link = document.getElementById("url-imagen");
+    const inputTitulo = document.getElementById("titulo-imagen");
+    const inputDescripcion = document.getElementById("descripcion-imagen");
+    const botonAgregar = document.getElementById("agregar-imagen");
+    const contenedorGaleria = document.getElementById("galeria");
+
+    botonAgregar.addEventListener("click", () => {
+      const url = link.value.trim();
+      const titulo = inputTitulo.value.trim();
+      const descripcion = inputDescripcion.value.trim();
+
+      
+
+      agregarTarjeta(url, titulo, descripcion);
+      link.value = "";
+      inputTitulo.value = "";
+      inputDescripcion.value = "";
+    });
+
+    function agregarTarjeta(url, titulo, descripcion) {
+      const tarjeta = document.createElement("div");
+      tarjeta.classList.add("tarjeta");
+      tarjeta.style.border = "2px solid brown";
+
+      const imagen = document.createElement("img");
+      imagen.setAttribute("src", url);
+      imagen.setAttribute("alt", titulo);
+
+      const contenido = document.createElement("div");
+      contenido.classList.add("contenido");
+
+      const tituloElem = document.createElement("h3");
+      tituloElem.textContent = titulo;
+
+      const descripcionElem = document.createElement("p");
+      descripcionElem.textContent = descripcion;
+
+      const botonEliminar = document.createElement("button");
+      botonEliminar.classList.add("boton-eliminar");
+      botonEliminar.textContent = "quitar";
+      botonEliminar.addEventListener("click", () => {
+        contenedorGaleria.removeChild(tarjeta);
+      });
+
+      contenido.appendChild(tituloElem);
+      contenido.appendChild(descripcionElem);
+      contenido.appendChild(botonEliminar);
+
+      tarjeta.appendChild(imagen);
+      tarjeta.appendChild(contenido);
+
+      contenedorGaleria.appendChild(tarjeta);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Cámara Web</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 20px;
+        }
+        
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+        }
+        
+        .contenedor {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        #videoElement {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        
+        #canvasElement {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            display: none;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background-color: #903737;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #652828;
+        }
+        
+        .instrucciones {
+            margin: 20px 0;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Camara</h1>
+        
+        <div class="instrucciones">
+            <p>Diga "foto" para tomar una foto</p>
+        </div>
+        
+        <video id="videoElement" autoplay></video>
+        <canvas id="canvasElement"></canvas>
+        
+        <div>
+            <button id="iniciarBtn">Prender la Cam</button>
+            <button id="descargarBtn" disabled>Descargá la foto</button>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvasElement');
+        const iniciarBtn = document.getElementById('iniciarBtn');
+        const descargarBtn = document.getElementById('descargarBtn');
+        const ctx = canvas.getContext('2d');
+        
+        let reconocimiento = null;
+        
+        iniciarBtn.addEventListener('click', function() {
+            iniciarCamara();
+            iniciarReconocimientoVoz();
+            iniciarBtn.disabled = true;
+        });
+        
+        descargarBtn.addEventListener('click', function() {
+            const enlace = document.createElement('a');
+            enlace.download = 'mi_foto.png';
+            enlace.href = canvas.toDataURL('image/png');
+            enlace.click();
+        });
+        
+        function iniciarCamara() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    
+                    video.addEventListener('loadedmetadata', function() {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                    });
+                })
+                .catch(function(error) {
+                    alert('Error al acceder a la cámara: ' + error.message);
+                });
+        }
+        
+        function iniciarReconocimientoVoz() {
+            reconocimiento = new webkitSpeechRecognition() || new SpeechRecognition();
+            reconocimiento.lang = 'es-ES';
+            reconocimiento.continuous = true;
+            
+            reconocimiento.onresult = function(event) {
+                const resultado = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                
+                if (resultado.includes('foto')) {
+                    capturarFoto();
+                }
+            };
+            
+            reconocimiento.onend = function() {
+                reconocimiento.start();
+            };
+            
+            reconocimiento.start();
+        }
+        
+        function capturarFoto() {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'block';
+            descargarBtn.disabled = false;
+        }
+    </script>
+</body>
+</html>

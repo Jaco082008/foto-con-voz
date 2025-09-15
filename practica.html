@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+	<ol id="lista">
+      <li id="#men">hola</li>
+      <li>Como</li>
+    </ol>  
+      <button class="boton">agregar</button>
+    
+<script>
+  const boton = document.getElementsByClassName('button')[0];
+
+// 2. Añadir un "escuchador de eventos"
+boton.addEventListener('click', function() {
+  // 3. Código a ejecutar cuando ocurra el evento
+  const mensaje = document.getElementById('men');
+  mensaje.textContent = '¡Gracias por hacer clic!';
+});
+  
+    
+
+</script>
+
+</body>
+</html>

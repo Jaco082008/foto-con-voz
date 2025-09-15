@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Laberinto</title>
+    <style>
+        *{ 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: sans-serif; padding: 20px;
+            background-color: #5041be;
+        }
+
+        .area {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background: #eee;
+            border: 3px solid black;
+            overflow: hidden;
+        }
+
+        .personaje {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: lightblue;
+            text-align: center;
+            line-height: 40px;
+            font-size: 24px;
+            left: 0;
+            top: 0;
+        }
+
+        .meta {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: green;
+            right: 0;
+            bottom: 0;
+        }
+
+        .muro {
+            position: absolute;
+            background: rgb(1, 1, 1);
+        }
+    </style>
+</head>
+<body>
+
+<h2>LABERINTO</h2>
+<div class="area" id="area">
+    <div class="personaje" id="jugador"></div>
+    <div class="meta" id="meta"></div>
+    <div class="muro" style="top:40px; left:0; width:300px; height:20px;"></div>
+    <div class="muro" style="top:100px; left:80px; width:20px; height:200px;"></div>
+    <div class="muro" style="top:280px; left:80px; width:200px; height:20px;"></div>
+    <div class="muro" style="top:120px; left:200px; width:20px; height:180px;"></div>
+</div>
+
+<script>
+    const jugador = document.getElementById("jugador");
+    const meta = document.getElementById("meta");
+    const muros = document.querySelectorAll(".muro");
+    const paso = 10;
+    let x = 0, y = 0;
+
+    document.addEventListener("keydown", e => {
+        let nx = x, ny = y;
+
+        if (e.key === "ArrowRight") nx += paso;
+        if (e.key === "ArrowLeft") nx -= paso;
+        if (e.key === "ArrowUp") ny -= paso;
+        if (e.key === "ArrowDown") ny += paso;
+        if (nx < 0 || ny < 0 || nx > 360 || ny > 360) return;
+
+        jugador.style.left = nx + "px";
+        jugador.style.top = ny + "px";
+
+        const pj = jugador.getBoundingClientRect();
+        let choca = false;
+
+        muros.forEach(muro => {
+        const m = muro.getBoundingClientRect();
+        if (
+            pj.left < m.right &&
+            pj.right > m.left &&
+            pj.top < m.bottom &&
+            pj.bottom > m.top
+        ) {
+            choca = true;
+        }
+        });
+
+        if (choca) {
+        jugador.style.left = x + "px";
+        jugador.style.top = y + "px";
+        return;
+        }
+
+        x = nx;
+        y = ny;
+
+        const m = meta.getBoundingClientRect();
+        if (
+        pj.left < m.right &&
+        pj.right > m.left &&
+        pj.top < m.bottom &&
+        pj.bottom > m.top
+        ) {
+        alert("Guau, Ganaste el laberinto Imposible de resolver");
+        x = y = 0;
+        jugador.style.left = "0px";
+        jugador.style.top = "0px";
+        }
+    });
+</script>
+
+</body>
+</html>
+

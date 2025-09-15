@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Juego Atrapa el Círculo</title>
+    <style>
+      body {
+          margin: 0;
+          padding: 0;
+          background-color: #263857;
+          overflow: hidden;
+          font-family: sans-serif;
+      }
+      #puntuacion {
+          margin: 10px;
+          top: 10px;
+          left: 10px;
+          font-size: 24px;
+          color: #ffffff;
+      }
+      #circulo {
+          width: 50px;
+          height: 50px;
+          background: crimson;
+          border-radius: 50%;
+          position: absolute;
+          cursor: pointer;
+      }
+    </style>
+</head>
+<body>
+
+    <div id="puntuacion">Puntos: 0</div>
+    <div id="circulo"></div>
+    
+    <script>
+        const circulo = document.getElementById('circulo');
+        const puntuacionTexto = document.getElementById('puntuacion');
+        let puntos = 0;
+
+        function moverCirculo() {
+            const anchoVentana = window.innerWidth;
+            const altoVentana = window.innerHeight;
+            const x = Math.random() * (anchoVentana - 50);
+            const y = Math.random() * (altoVentana - 50);
+            circulo.style.left = x + 'px';
+            circulo.style.top = y + 'px';
+        }
+        circulo.addEventListener('click', () => {
+            puntos++;
+            puntuacionTexto.textContent = 'Puntos: ' + puntos;
+        });
+        moverCirculo(); 
+        const intervalo = setInterval(moverCirculo, 1000); 
+    </script>
+</body>
+</html>
